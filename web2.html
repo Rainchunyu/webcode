@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <script src="animate.js"></script>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            
+        }
+        ul,li{
+            list-style: none;
+            text-align: center;
+        }
+        #ss{
+            width:1249px;
+            background-color: gainsboro;
+            margin: auto;
+            margin-left: 0px;
+            position: relative;
+        }
+        #ss>img{
+            padding-left: 124px;
+            padding-top: 1px;
+            position:absolute;
+        }
+        #s{ 
+            width:1000px; 
+            overflow:hidden;
+            margin: auto;
+            background-color:gainsboro;
+        }
+        #s div{ 
+            width:2500px;
+        }
+        #s #i span{ 
+            width:1250px; 
+            font-size: small;
+            color: red;
+            display:block; 
+            float:left;
+        }
+
+        .box{
+            width:1200px;
+            height: 397px;
+            
+            margin: 30px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .slider{
+            width:8400px;
+            position: absolute;
+            left: -1200px;
+        }
+        
+        .slide{
+            width: 1200px;
+            overflow: hidden;
+            float: left;
+        }
+        .box>span{
+            display: block;
+            width: 30px;
+            height: 50px;
+            text-align: center;
+            cursor: pointer;
+            color:white;
+            top: 175px;
+            line-height: 50px;
+            background: rgb(255,0,0);
+            font-size: 30px;
+            position: absolute;
+            /* display:none; */
+            opacity: 0;
+        }
+        #left{
+            left: 30px;
+        }
+        #right{
+            right: 30px;
+        }
+        .nav{
+            position: absolute;
+            left:500px;
+            bottom: 20px;
+        }
+        .nav>li{
+            float: left;
+            width: 20px;
+            height: 20px;
+            background: #ccc;
+            cursor: pointer;
+            margin: 0 10px;
+            border-radius: 50%;
+        }
+        .nav .active{
+            background: red;
+            color: white;
+        }
+        #big{
+            border-left: 2px solid black;
+            border-right: 2px solid black;
+            width:1249px;
+            height: 450px;
+            margin-left: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="big">
+    <div id="ss">
+        <img src="images/a15.png">
+        <div id="s">                
+                <div id="i">
+                <span id="t">[温馨提示]最近有不少非法分子在网上骗人，请大家注意!!!!</span>
+                </div>
+        </div>
+    </div>
+        
+    <div class="box" id="box">
+        <div class="slider" id="slider">
+            <div class="slide"><img src="images/b5.png" alt=""/></div>
+            <div class="slide"><img src="images/b1.png" alt=""/></div>
+            <div class="slide"><img src="images/b2.png" alt=""/></div>
+            <div class="slide"><img src="images/b3.png" alt=""/></div>
+            <div class="slide"><img src="images/b4.png" alt=""/></div>
+            <div class="slide"><img src="images/b5.png" alt=""/></div>
+            <div class="slide"><img src="images/b1.png" alt=""/></div>
+            
+        </div>
+        <span id="left"><</span>
+        <span id="right">></span>
+        <ul class="nav" id="nav">
+            <li class="active">1</li>
+            <li >2</li>
+            <li >3</li>
+            <li >4</li>
+            <li >5</li>
+        </ul>
+    </div>
+    </div>
+</body>
+<script>
+    var box=document.getElementById("box");
+    var nav=document.getElementById("nav").children;
+    var slider=document.getElementById("slider");
+    var left=document.getElementById("left");
+    var right=document.getElementById("right");
+    var index=1;
+    var timer;
+    var isMoving=false;
+
+
+    //轮播下一张
+    function next(){
+        if(isMoving){
+            return;
+        }
+        isMoving=true;
+        index++;
+        navChange();
+        animate(slider,{left:-1200*index},function(){
+            if(index===6){
+                slider.style.left="-1200px";
+                index=1;
+            }
+            isMoving=false;
+        });
+        
+    }
+
+    function prev(){
+        if(isMoving){
+            return;
+        }
+        isMoving=true;
+        index--;
+        navChange();
+        animate(slider,{left:-1200*index},function(){
+            if(index===0){
+                slider.style.left="-6000px";
+                index=5;
+            }
+            isMoving=false;
+        });
+    }
+    var timer=setInterval(next,3000);
+    //鼠标划入清定时器
+    box.onmouseover=function(){
+        animate(left,{opacity:50});
+        animate(right,{opacity:50});
+        clearInterval(timer);
+    }
+    //鼠标划出开定时器
+    box.onmouseout=function(){
+        animate(left,{opacity:0});
+        animate(right,{opacity:0});
+        timer=setInterval(next,3000);
+    }
+    right.onclick=next;
+    left.onclick=prev;
+    for(var i=0;i<nav.length;i++){
+        nav[i].value=i;
+        nav[i].onclick=function(){
+            index=this.value+1;
+            navChange();
+            animate(slider,{left:-1200*index});
+
+        }
+    }
+    function navChange(){
+        for(var i=0;i<nav.length;i++){
+            nav[i].className='';
+        }
+        if(index>5){
+            nav[0].className='active';
+        }
+        else if(index<=0){
+            nav[4].className='active';
+        }
+        else{
+            nav[index-1].className='active';
+        }
+    }
+    var speed = 15;
+    var s = document.getElementById("s");
+    var i = document.getElementById("i");
+    var t = document.getElementById("t");
+    var d ;
+    i.appendChild(t.cloneNode(true));
+    function scroll()
+    {
+        s.scrollLeft += 1;
+        if(s.scrollLeft >= t.offsetWidth) {
+            s.scrollLeft = 0;
+        }
+    }
+    d = window.setInterval(scroll,speed);
+    s.onmouseover = function(){
+        window.clearInterval(d)
+    }
+    s.onmouseout = function(){
+        d = window.setInterval(scroll,speed)
+    }
+</script>
+</html>
